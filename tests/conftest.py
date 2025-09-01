@@ -7,9 +7,11 @@ from selenium.webdriver.common.by import By
 from curl import *
 from locators import Locators
 from data import Credantial
+from generating_logins import EmailPasswordGenerator
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def driver():
+    # Фикстура создает и закрывает драйвер после каждого теста
     from selenium.webdriver.chrome.options import Options
     
     chrome_options = Options()
@@ -29,10 +31,21 @@ def driver():
         pass
 
 @pytest.fixture
+def generate_new_user_data():
+    # Фикстура для генерации новых данных пользователя
+    generator = EmailPasswordGenerator()
+    email, password = generator.generate()
+    return {
+        'name': 'Людмила',
+        'email': email,
+        'password': password
+    }
+
+@pytest.fixture
 def start_from_main_page(driver):
     try:
         driver.get(main_site)
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located(Locators.THE_SIGN_IN_TO_ACCOUNT_BUTTON))
+        WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
         return driver
     except Exception as e:
         print(f"Ошибка: {e}")
@@ -44,13 +57,11 @@ def register_new_account(driver):
     try:
         # Переходим на страницу регистрации
         driver.get(register_site)
-        
-        # Ждем загрузки страницы регистрации
+
         WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located(Locators.FIELD_NAME_REGISTER)
         )
         
-        # Используем данные из Credantial
         name = Credantial.name
         email = Credantial.email
         password = Credantial.password
@@ -70,17 +81,31 @@ def register_new_account(driver):
         password_field.send_keys(password)
         print("Заполнено поле Пароль")
         
-        # Нажимаем кнопку регистрации
         register_button = driver.find_element(*Locators.BUTTON_REGISTER)
         register_button.click()
         
-        # Ждем либо успешной регистрации, либо ошибки
+        
         try:
-            # Если регистрация успешна - ждем перехода
+            # Если регистрация успешна - ждем перехода на страницу логина
             WebDriverWait(driver, 5).until(
-                lambda driver: login_site in driver.current_url or main_site in driver.current_url
+                EC.url_to_be(login_site)
             )
-            print("Регистрация успешна")
+            print("Регистрация успешна, перешли на страницу логина")
+            
+            # Авторизуемся
+            email_field = driver.find_element(*Locators.FIELD_EMAIL_LOGIN)
+            email_field.send_keys(email)
+            
+            password_field = driver.find_element(*Locators.FIELD_PASSWORD_LOGIN)
+            password_field.send_keys(password)
+            
+            driver.find_element(*Locators.BUTTON_ENTRANCE).click()
+            
+            # Ждем перехода на главную страницу после авторизации
+            WebDriverWait(driver, 10).until(
+                EC.url_to_be(main_site)
+            )
+            print("Успешная авторизация после регистрации")
             
         except TimeoutException:
             # Если остались на странице регистрации - проверяем ошибку
@@ -89,27 +114,34 @@ def register_new_account(driver):
                 print("Пользователь уже существует, нажимаем 'Войти'")
                 
                 # Нажимаем кнопку "Войти" на странице регистрации
-                login_link = driver.find_element(*Locators.LOGIN_LINK)
+                login_link = driver.find_element(*Locators.LOGIN_LINK_REGISTER)
                 login_link.click()
                 
                 # Ждем загрузки страницы логина
                 WebDriverWait(driver, 10).until(
-                    EC.visibility_of_element_located(Locators.FIELD_EMAIL)
+                    EC.visibility_of_element_located(Locators.FIELD_EMAIL_LOGIN)
                 )
                 print("Перешли на страницу логина")
                 
-            except:
-                print("Неизвестная ошибка при регистрации")
+                # Авторизуемся
+                email_field = driver.find_element(*Locators.FIELD_EMAIL_LOGIN)
+                email_field.send_keys(email)
+                
+                password_field = driver.find_element(*Locators.FIELD_PASSWORD_LOGIN)
+                password_field.send_keys(password)
+                
+                driver.find_element(*Locators.BUTTON_ENTRANCE).click()
+                
+                # Ждем перехода на главную страницу
+                WebDriverWait(driver, 10).until(
+                    EC.url_to_be(main_site)
+                )
+                print("Успешная авторизация существующего пользователя")
+                
+            except Exception as inner_e:
+                print(f"Неизвестная ошибка при регистрации: {inner_e}")
                 driver.save_screenshot("registration_unknown_error.png")
                 raise
-        
-        # ВСЕГДА переходим на главную страницу после регистрации/авторизации
-        if driver.current_url != main_site:
-            driver.get(main_site)
-            WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located(Locators.THE_SIGN_IN_TO_ACCOUNT_BUTTON)
-            )
-            print("Перешли на главную страницу")
         
         return email, password
         
@@ -120,30 +152,19 @@ def register_new_account(driver):
 
 @pytest.fixture
 def login_existing_user(driver):
-    """Фикстура для авторизации существующего пользователя"""
+    # Фикстура для авторизации существующего пользователя
     def _login(email, password):
         try:
-            # Переходим на страницу логина
             driver.get(login_site)
-            
-            # Ждем загрузки страницы логина
             WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located(Locators.FIELD_EMAIL)
+                EC.url_to_be(login_site)
             )
             
-            # Заполняем форму
-            email_field = driver.find_element(*Locators.FIELD_EMAIL)
-            email_field.send_keys(email)
-            
-            password_field = driver.find_element(*Locators.FIELD_PASSWORD)
-            password_field.send_keys(password)
-            
-            # Нажимаем кнопку входа
             driver.find_element(*Locators.BUTTON_ENTRANCE).click()
             
             # Ждем перехода на главную страницу
             WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located((By.XPATH, "//h1[contains(text(), 'Соберите бургер')]"))
+                EC.url_to_be(main_site)
             )
             
             print(f"Успешная авторизация пользователя: {email}")
@@ -154,3 +175,31 @@ def login_existing_user(driver):
             raise
     
     return _login
+
+@pytest.fixture
+def start_from_main_not_login(driver):
+    # Фикстура для начала теста с главной страницы без авторизации
+    try:
+        driver.get(main_site)
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(Locators.THE_SIGN_IN_TO_ACCOUNT_BUTTON)
+        )
+        return driver
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        driver.save_screenshot("main_page_error.png")
+        raise
+
+@pytest.fixture
+def start_from_login_page(driver):
+    """Фикстура для начала теста со страницы логина"""
+    try:
+        driver.get(login_site)
+        WebDriverWait(driver, 10).until(
+            EC.url_to_be(login_site)
+        )
+        return driver
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        driver.save_screenshot("login_page_error.png")
+        raise

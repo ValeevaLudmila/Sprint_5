@@ -1,66 +1,117 @@
-import ...
+import pytest
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
+from locators import Locators
+from curl import *
 
 class TestTransitionByConstructor:
-    def test_check_transition_by_constructor(self, start_from_main_page):
+    def test_check_transition_by_constructor(self, start_from_main_page, register_new_account):
         driver = start_from_main_page
+        email, password = register_new_account
         
-        # Ждем переход на главную страницу
-        WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
+        try:
+            # Убедимся что мы на главной странице и авторизованы
+            WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
+            WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(Locators.BUTTON_CHECKOUT)
+            )
 
-        # Нажать на кнопку "Личный кабинет"
-        driver.find_element(*Locators.PERSONAL_ACCOUNT).click()
+            # Нажать на кнопку "Личный кабинет"
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(Locators.PERSONAL_ACCOUNT)
+            ).click()
 
-        # Ждем загрузки надписи "конструктор"
-        WebDriverWait(driver, 3).until(EC.visibility_of_element_located(Locators.the_constructor_button))
+            # Ждем загрузки страницы профиля
+            WebDriverWait(driver, 10).until(
+                EC.url_contains("/account")
+            )
 
-        # Кликаем по кнопке "конструктор"
-        driver.find_element(*Locators.the_constructor_button).click()
+            # Кликаем по кнопке "Конструктор"
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(Locators.CONSTRUCTOR_BUTTON)
+            ).click()
 
-        # Ждем переход на главную страницу
-        WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
+            # Ждем переход на главную страницу
+            WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
 
-        # Проверяем что мы на основной странице
-        assert driver.current_url == main_site
+            # Проверяем что мы на основной странице
+            assert driver.current_url == main_site
+            print("Тест перехода через конструктор выполнен успешно!")
+
+        except Exception as e:
+            print(f"Ошибка в тесте: {e}")
+            driver.save_screenshot("constructor_error.png")
+            raise
 
 
 class TestTransitionByLogo:
-    def test_transition_by_logo(self, start_from_login_page):
-        driver = start_from_login_page
+    def test_transition_by_logo(self, start_from_main_page, register_new_account):
+        driver = start_from_main_page
+        email, password = register_new_account
+        
+        try:
+            # Убедимся что мы на главной странице и авторизованы
+            WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
+            WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(Locators.BUTTON_CHECKOUT)
+            )
 
+            # Нажать на кнопку "Личный кабинет"
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(Locators.PERSONAL_ACCOUNT)
+            ).click()
 
-        # Ждем загрузки надписи "профиль"
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located(Locators.button_personal_area))
+            # Ждем загрузки страницы профиля
+            WebDriverWait(driver, 15).until(
+                EC.url_contains("/account")
+            )
 
-        # Нажать на кнопку "Личный кабинет"
-        driver.find_element(*Locators.PERSONAL_ACCOUNT).click()
+            # Кликаем по логотипу (исправленный локатор)
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(Locators.LOGO)
+            ).click()
 
-        # Ждем загрузки надписи "профиль"
-        WebDriverWait(driver, 15).until(EC.visibility_of_element_located(Locators.INSCRIPTION_PROFILE))
+            # Ждем перехода на главную страницу
+            WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
 
-        # Кликаем по "logo"
-        driver.find_element(*Locators.logo).click()
+            # Проверяем что мы на основной странице
+            assert driver.current_url == main_site
+            print("Тест перехода через логотип выполнен успешно!")
 
-        # Ждем перехода на главную страницу
-        WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
-
-        # Проверяем что мы на основной странице
-        assert driver.current_url == (main_site)
+        except Exception as e:
+            print(f"Ошибка в тесте: {e}")
+            driver.save_screenshot("logo_error.png")
+            raise
 
 
 class TestCheckPageProfile:
-    def test_transition_before_profile(self, start_from_login_page):
-        driver = start_from_login_page
+    def test_transition_before_profile(self, start_from_main_page, register_new_account):
+        driver = start_from_main_page
+        email, password = register_new_account
+        
+        try:
+            # Убедимся что мы на главной странице и авторизованы
+            WebDriverWait(driver, 10).until(EC.url_to_be(main_site))
+            WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(Locators.BUTTON_CHECKOUT)
+            )
 
-        # Ждем загрузки "булок"
-        WebDriverWait(driver, 10).until(EC.visibility_of_elenent_located(Locators.inscription_bread))
+            # Нажать на кнопку "Личный кабинет"
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(Locators.PERSONAL_ACCOUNT)
+            ).click()
 
-        # Нажать на кнопку "Личный кабинет"
-        driver.find_element(*Locators.PERSONAL_ACCOUNT).click()
+            # Ждем переход на страницу профиля
+            WebDriverWait(driver, 10).until(
+                EC.url_to_be(profile_site)
+            )
 
-        # Ждем переход на страницу профиля
-        WebDriverWait(driver, 10).until(EC.url_to_be(profile_site))
+            # Проверить что мы на странице профиля
+            assert driver.current_url == profile_site
+            print("Тест перехода в профиль выполнен успешно!")
 
-        # Проверить что мы на странице профиля
-        assert driver.current_url == (profile_site)
-
-        driver.quit()
+        except Exception as e:
+            print(f"Ошибка в тесте: {e}")
+            driver.save_screenshot("profile_error.png")
+            raise

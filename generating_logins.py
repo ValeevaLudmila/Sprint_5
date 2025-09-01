@@ -2,16 +2,20 @@ import random
 import string
 
 class EmailPasswordGenerator:
-    def __init__(self):
-        self.email = None
-        self.password = None
-
     def generate(self):
-        if self.email is None and self.password is None:
-            email_length = random.randint(5, 10)
-            self.email = ''.join(random.choices(string.ascii_lowercase + string.digits, k=email_length)) + "@example.com"
+        # Генерируем случайный email
+        email_length = random.randint(5, 10)
+        email = ''.join(random.choices(string.ascii_lowercase + string.digits, k=email_length)) + "@example.com"
 
-            password_length = random.randint(8, 12)
-            self.password = ''.join(random.choices(string.ascii_letters + string.digits, k=password_length))
+        # Генерируем случайный пароль (минимум 8 символов)
+        password_length = random.randint(8, 12)
+        password = ''.join(random.choices(string.ascii_letters + string.digits, k=password_length))
 
-        return self.email, self.password
+        return email, password
+
+# Функции для обратной совместимости
+def generate_email():
+    return EmailPasswordGenerator().generate()[0]
+
+def generate_password():
+    return EmailPasswordGenerator().generate()[1]

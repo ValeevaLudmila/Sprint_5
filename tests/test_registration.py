@@ -9,7 +9,7 @@ from data import Credantial
 
 class TestCheckNewRegister:
     def test_registration(self, driver, generate_new_user_data):
-        """Тест успешной регистрации нового аккаунта"""
+        # Тест успешной регистрации нового аккаунта
         user_data = generate_new_user_data
         
         try:
@@ -91,19 +91,19 @@ class TestCheckNewRegister:
 
 class TestCheckingCreationExistingAccount:
     def test_existing_account(self, driver):
-        """Тест попытки регистрации существующего аккаунта"""
+        # Тест попытки регистрации существующего аккаунта
         try:
             # 1. Переходим на страницу регистрации
             driver.get(register_site)
             print("Перешли на страницу регистрации")
             
-            # 2. Ждем загрузки формы регистрации (ИСПРАВЛЕНО)
+            # 2. Ждем загрузки формы регистрации
             WebDriverWait(driver, 15).until(
                 EC.visibility_of_element_located(Locators.FIELD_NAME_REGISTER)
             )
             print("Форма регистрации загружена")
             
-            # 3. Заполняем форму данными существующего пользователя (ИСПРАВЛЕНО)
+            # 3. Заполняем форму данными существующего пользователя
             driver.find_element(*Locators.FIELD_NAME_REGISTER).send_keys(Credantial.name)
             driver.find_element(*Locators.FIELD_EMAIL_REGISTER).send_keys(Credantial.email)
             driver.find_element(*Locators.FIELD_PASSWORD_REGISTER).send_keys(Credantial.password)
@@ -132,7 +132,7 @@ class TestCheckingCreationExistingAccount:
 
 class TestCheckRegisterNoName:
     def test_registration_no_name(self, driver):
-        """Тест регистрации без имени"""
+        # Тест регистрации без имени
         try:
             # 1. Переходим на страницу регистрации
             driver.get(register_site)
@@ -173,7 +173,7 @@ class TestCheckRegisterNoName:
 
 class TestCheckingErrorPassword:
     def test_error_password(self, driver):
-        """Тест ошибки при коротком пароле"""
+        # Тест ошибки при коротком пароле
         try:
             # 1. Переходим на страницу регистрации
             driver.get(register_site)
@@ -218,7 +218,7 @@ class TestCheckingErrorPassword:
 
 class TestCheckingNoPassword:
     def test_no_password(self, driver):
-        """Тест регистрации без пароля"""
+        # Тест регистрации без пароля
         try:
             # 1. Переходим на страницу регистрации
             driver.get(register_site)
@@ -234,7 +234,7 @@ class TestCheckingNoPassword:
             generator = EmailPasswordGenerator()
             email, _ = generator.generate()
             
-            # 4. Заполняем только имя и email (пароль пропускаем)
+            # 4. Заполняем только имя и email
             driver.find_element(*Locators.FIELD_NAME_REGISTER).send_keys("Тест")  # ИСПРАВЛЕНО
             driver.find_element(*Locators.FIELD_EMAIL_REGISTER).send_keys(email)
             print("Заполнены имя и email (пароль пропущен)")

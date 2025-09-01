@@ -2,11 +2,15 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from locators import Locators
+from data import Credantial
 
 class TestCheckChapterBread:
-    def test_check_chapter_bread(self, start_from_login_page):
-        driver = start_from_login_page
+    def test_check_chapter_bread(self, start_from_main_page, register_new_account):
+        driver = start_from_main_page
         driver.maximize_window()
+
+        # Сначала регистрируем/логинимся
+        email, password = register_new_account
 
         try:
             # Нажать на раздел "Соусы"
@@ -37,9 +41,12 @@ class TestCheckChapterBread:
 
 
 class TestCheckChapterFillings:
-    def test_check_chapter_fillings(self, start_from_login_page):
-        driver = start_from_login_page
+    def test_check_chapter_fillings(self, start_from_main_page, register_new_account):
+        driver = start_from_main_page
         driver.maximize_window()
+
+        # Сначала регистрируем/логинимся
+        email, password = register_new_account
 
         try:
             # Нажать на раздел "Начинки"
@@ -65,9 +72,12 @@ class TestCheckChapterFillings:
 
 
 class TestCheckChapterSauce:
-    def test_check_chapter_sauce(self, start_from_login_page):
-        driver = start_from_login_page
+    def test_check_chapter_sauce(self, start_from_main_page, register_new_account):
+        driver = start_from_main_page
         driver.maximize_window()
+
+        # Сначала регистрируем/логинимся
+        email, password = register_new_account
 
         try:
             # Нажать на раздел "Соусы"
