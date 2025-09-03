@@ -2,76 +2,65 @@ from selenium.webdriver.common.by import By
 
 class Locators:
     # ===== ОСНОВНЫЕ ЭЛЕМЕНТЫ =====
-    # Кнопка "Войти в аккаунт" на главной странице
     THE_SIGN_IN_TO_ACCOUNT_BUTTON = (By.XPATH, "//button[text()='Войти в аккаунт']")
-    
-    # Основной логотип
     LOGO = (By.XPATH, "//div[contains(@class, 'logo')]")
-    
-    # Кнопка "Личный Кабинет"
     PERSONAL_ACCOUNT = (By.XPATH, '//a[p[text()="Личный Кабинет"]]')
-    
-    # Кнопка "Оформить заказ" (появляется после авторизации)
     BUTTON_CHECKOUT = (By.XPATH, "//button[contains(text(), 'Оформить заказ')]")
-    
-    # Кнопка "Конструктор"
-    CONSTRUCTOR_BUTTON = (By.XPATH, "//p[@class='AppHeader_header__linkText__3q_va ml-2' and text()='Конструктор']")
-    
-    # Надпись "Выход"
-    BUTTON_LOGOUT = (By.XPATH, './/button[contains(text(),"Выход")]')
+    CONSTRUCTOR_BUTTON = (By.XPATH, "//p[contains(text(),'Конструктор')]")
+    BUTTON_LOGOUT = (By.XPATH, "//button[contains(text(),'Выход')]")
 
     # ===== ФОРМА РЕГИСТРАЦИИ =====
-    # Поля для регистрации
-    FIELD_NAME_REGISTER = (By.XPATH, "(//input[@name='name'])[1]")  # Поле имени
-    FIELD_EMAIL_REGISTER = (By.XPATH, "(//input[@name='name'])[2]")  # Поле email
-    FIELD_PASSWORD_REGISTER = (By.XPATH, "//input[@name='Пароль']")  # Поле пароля
+    # ИСПРАВЛЕНО: разные имена для полей
+    FIELD_EMAIL = (By.XPATH, "//input[@type='email']")  # Общее поле email
+    FIELD_PASSWORD = (By.XPATH, "//input[@type='password']")  # Общее поле пароля
+    FIELD_NAME = (By.XPATH, "//input[@name='name']")  # Общее поле имени
+
+# Для страницы логина после регистрации
+    LOGIN_PAGE_INDICATOR = (By.XPATH, "//h2[text()='Вход']")
+
+    FIELD_NAME_REGISTER = (By.XPATH, "//label[contains(text(),'Имя')]/following-sibling::input")
+    FIELD_EMAIL_REGISTER = (By.XPATH, "//label[contains(text(),'Email')]/following-sibling::input")
+    FIELD_PASSWORD_REGISTER = (By.XPATH, "//input[@type='password']")
     
-    # Кнопка "Зарегистрироваться"
     BUTTON_REGISTER = (By.XPATH, "//button[text()='Зарегистрироваться']")
-    
-    # Ссылка "Зарегистрироваться" на главной
     REGISTER_LINK = (By.XPATH, '//a[text()="Зарегистрироваться" and @href="/register"]')
-    
-    # Ссылка "Войти" на странице регистрации
     LOGIN_LINK_REGISTER = (By.XPATH, "//a[text()='Войти' and @href='/login']")
 
     # ===== ФОРМА АВТОРИЗАЦИИ =====
-    # Поля для авторизации
-    FIELD_EMAIL_LOGIN = (By.XPATH, "//input[@name='name' and @type='text']")  # Поле email на странице логина
-    FIELD_PASSWORD_LOGIN = (By.XPATH, "//input[@name='Пароль' and @type='password']")  # Поле пароля на странице логина
-    
-    # Кнопка "Войти"
-    BUTTON_ENTRANCE = (By.XPATH, ".//button[contains(text(),'Войти')]")
-    
-    # Ссылка "Войти" на других страницах
+    # ИСПРАВЛЕНО: разные локаторы для email
+    FIELD_EMAIL_LOGIN = (By.XPATH, "//input[@type='text' and @name='name']")
+    FIELD_PASSWORD_LOGIN = (By.XPATH, "//input[@type='password' and @name='Пароль']")
+    BUTTON_ENTRANCE = (By.XPATH, "//button[text()='Войти']")
     LOGIN_BUTTON = (By.XPATH, "//a[text()='Войти']")
 
     # ===== ФОРМА ВОССТАНОВЛЕНИЯ ПАРОЛЯ =====
-    # Кнопка "Восстановить пароль"
     BUTTON_RESTORE_PASSWORD = (By.XPATH, "//a[@href='/forgot-password']")
-    
-    # Поле email для восстановления
-    RECOVERY_FIELD_EMAIL = (By.XPATH, "//input[@name='name']")
+    RECOVERY_FIELD_EMAIL = (By.XPATH, "//input[@type='text']")
 
     # ===== КОНСТРУКТОР =====
-    # Разделы конструктора
-    BREAD_SECTION = (By.XPATH, ".//span[contains(text(), 'Булки')]")
-    SAUCES_SECTION = (By.XPATH, ".//span[contains(text(), 'Соусы')]")
-    TOPPINGS_SECTION = (By.XPATH, ".//span[contains(text(), 'Начинки')]")
-    
-    # Активный раздел
-    ACTIVE_SECTION = (By.XPATH, '//div[contains(@class, "tab_tab_type_current")]')
-    
-    # Надписи разделов
-    INSCRIPTION_BREAD = (By.XPATH, "//h2[contains(text(),'Булки')]")
+    BREAD_SECTION = (By.XPATH, "//span[text()='Булки']/parent::div")
+    SAUCES_SECTION = (By.XPATH, "//span[text()='Соусы']/parent::div")
+    TOPPINGS_SECTION = (By.XPATH, "//span[text()='Начинки']/parent::div")
+    ACTIVE_SECTION = (By.XPATH, "//div[contains(@class, 'tab_tab_type_current')]")
+    INSCRIPTION_BREAD = (By.XPATH, "//h2[text()='Булки']")
 
     # ===== ЛИЧНЫЙ КАБИНЕТ =====
-    # Перейти в профиль
-    INSCRIPTION_PROFILE = (By.XPATH, './/a[contains(@href, "/account/profile")]')
-    
-    # Кнопка "Выход" в аккаунте
-    BUTTON_LOGOUTBIG = (By.XPATH, "//button[contains(@class, 'Account_button') and text()='Выход']")
+    INSCRIPTION_PROFILE = (By.XPATH, "//a[contains(@href, '/account/profile')]")
+    BUTTON_LOGOUTBIG = (By.XPATH, "//button[contains(text(), 'Выход')]")
 
-    # ===== ОШИБКИ =====
-    ERROR_ACCOUNT_EXISTS = (By.XPATH, ".//p[contains(text(), 'Такой пользователь уже существует')]")
-    ERROR_PASSWORD = (By.XPATH, '//div[contains(@class, "input_status_error")]')
+    # ===== ОШИБКИ И ВАЛИДАЦИЯ =====
+    ERROR_ACCOUNT_EXISTS = (By.XPATH, "//p[contains(text(), 'Такой пользователь уже существует')]")
+    ERROR_PASSWORD = (By.XPATH, "//p[contains(text(), 'Некорректный пароль')]")
+    VALIDATION_ERROR = (By.XPATH, "//p[contains(@class, 'input__error')]")
+    ANY_ERROR_MESSAGE = (By.XPATH, "//p[contains(@class, 'error') or contains(@class, 'Error')]")
+    
+    # ===== ДОПОЛНИТЕЛЬНЫЕ ЛОКАТОРЫ ДЛЯ ТЕСТОВ =====
+    # Для проверки успешной регистрации/логина
+    SUCCESS_MESSAGE = (By.XPATH, "//div[contains(@class, 'success')]")
+    
+    # Для навигации
+    PROFILE_LINK = (By.XPATH, "//a[contains(@href, '/account')]")
+    
+    # Для работы с всплывающими окнами
+    MODAL_OVERLAY = (By.XPATH, "//div[contains(@class, 'modal_overlay')]")
+    MODAL_CLOSE_BUTTON = (By.XPATH, "//button[contains(@class, 'modal_close')]")

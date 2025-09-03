@@ -1,5 +1,7 @@
-main_site = "https://stellarburgers.nomoreparties.site/"
-login_site = "https://stellarburgers.nomoreparties.site/login"
-register_site = "https://stellarburgers.nomoreparties.site/register"
-forgot_password_site = "https://stellarburgers.nomoreparties.site/forgot-password"
-profile_site = "https://stellarburgers.nomoreparties.site/account/profile"
+class Urls:
+    """URL-адреса для тестирования."""
+    MAIN_SITE = "https://stellarburgers.nomoreparties.site/"
+    LOGIN_SITE = f"{MAIN_SITE}login"
+    REGISTER_SITE = f"{MAIN_SITE}register"
+    FORGOT_PASSWORD_SITE = f"{MAIN_SITE}forgot-password"
+    PROFILE_SITE = f"{MAIN_SITE}account/profile"
