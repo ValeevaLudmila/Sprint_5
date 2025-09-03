@@ -132,7 +132,7 @@ def registered_user(driver):
         try:
             driver.find_element(*Locators.ERROR_ACCOUNT_EXISTS)
             # Пользователь уже существует, используем тестовые данные
-            return Credantial.email, Credantial.password
+            return Credantial.EMAIL, Credantial.PASSWORD
         except NoSuchElementException:
             # Другая ошибка регистрации
             raise
@@ -140,10 +140,10 @@ def registered_user(driver):
 @pytest.fixture
 def authenticated_user(driver):
     """Фикстура для аутентифицированного пользователя."""
-    login_user(driver, Credantial.email, Credantial.password)
+    login_user(driver, Credantial.EMAIL, Credantial.PASSWORD)
     return {
-        "email": Credantial.email,
-        "password": Credantial.password
+        "email": Credantial.EMAIL,
+        "password": Credantial.PASSWORD
     }
 
 @pytest.fixture
@@ -158,7 +158,7 @@ def start_from_main_not_login(driver):
 @pytest.fixture
 def login_existing_user(driver):
     """Фикстура для логина существующего тестового пользователя."""
-    def _login_user(email=Credantial.email, password=Credantial.password):
+    def _login_user(email=Credantial.EMAIL, password=Credantial.PASSWORD):
         # Переходим на страницу логина
         driver.get(Urls.LOGIN_SITE)
         
