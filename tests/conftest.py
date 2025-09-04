@@ -27,7 +27,7 @@ if project_root not in sys.path:
 # Теперь можно импортировать модули
 from data import (
     TestData, StringValues, LogMessages, ExceptionTypes,
-    Credantial, ErrorMessages
+    Credantial, ErrorMessages, ChromeOptions
 )
 from locators import Locators
 from curl import Urls
@@ -39,13 +39,13 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture(scope=StringValues.FUNCTION_SCOPE)
 def driver():
-    """Фикстура создает и настраивает драйвер с полной конфигурацией."""
+    # Фикстура создает и настраивает драйвер с полной конфигурацией.
     chrome_options = Options()
     # Базовые опции Chrome для стабильности
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument(ChromeOptions.NO_SANDBOX)
+    chrome_options.add_argument(ChromeOptions.DISABLE_DEV_SHM)
+    chrome_options.add_argument(ChromeOptions.DISABLE_EXTENSIONS)
+    chrome_options.add_argument(ChromeOptions.DISABLE_GPU)
     
     driver_instance = None
     try:
@@ -78,24 +78,19 @@ def driver():
         logger.error(error_msg)
         pytest.fail(error_msg)
         
-    except Exception as e:
-        error_msg = LogMessages.UNEXPECTED_ERROR.format(e)
-        logger.critical(error_msg)
-        raise
-        
     finally:
         if driver_instance:
             try:
                 logger.info(LogMessages.QUITTING_WEBDRIVER)
                 driver_instance.quit()
                 logger.info(LogMessages.WEBDRIVER_QUIT_SUCCESS)
-            except Exception as e:
+            except (WebDriverException, InvalidSessionIdException, NoSuchWindowException) as e:
                 logger.warning(LogMessages.DRIVER_QUIT_ERROR.format(e))
 
 
 @pytest.fixture
 def generate_new_user_data():
-    """Фикстура для генерации новых данных пользователя."""
+    # Фикстура для генерации новых данных пользователя.
     generator = EmailPasswordGenerator()
     email, password = generator.generate()
     return {
@@ -107,7 +102,7 @@ def generate_new_user_data():
 
 @pytest.fixture
 def start_from_main_page(driver):
-    """Фикстура для начала теста с главной страницы."""
+    # Фикстура для начала теста с главной страницы.
     driver.get(Urls.MAIN_SITE)
     WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
         EC.url_to_be(Urls.MAIN_SITE)
@@ -117,7 +112,7 @@ def start_from_main_page(driver):
 
 @pytest.fixture
 def start_from_login_page(driver):
-    """Фикстура для начала теста со страницы логина."""
+    # Фикстура для начала теста со страницы логина.
     driver.get(Urls.LOGIN_SITE)
     WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
         EC.url_to_be(Urls.LOGIN_SITE)
@@ -127,7 +122,7 @@ def start_from_login_page(driver):
 
 @pytest.fixture
 def start_from_register_page(driver):
-    """Фикстура для начала теста со страницы регистрации."""
+    # Фикстура для начала теста со страницы регистрации.
     driver.get(Urls.REGISTER_SITE)
     WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
         EC.visibility_of_element_located(Locators.FIELD_NAME_REGISTER)
@@ -137,7 +132,7 @@ def start_from_register_page(driver):
 
 @pytest.fixture
 def registered_user(driver):
-    """Фикстура для регистрации нового пользователя."""
+    # Фикстура для регистрации нового пользователя.
     generator = EmailPasswordGenerator()
     email, password = generator.generate()
     
@@ -161,7 +156,7 @@ def registered_user(driver):
 
 @pytest.fixture
 def authenticated_user(driver):
-    """Фикстура для аутентифицированного пользователя."""
+    # Фикстура для аутентифицированного пользователя.
     login_user(driver, Credantial.EMAIL, Credantial.PASSWORD)
     return {
         StringValues.EMAIL: Credantial.EMAIL,
@@ -171,7 +166,7 @@ def authenticated_user(driver):
 
 @pytest.fixture
 def start_from_main_not_login(driver):
-    """Фикстура для начала теста с главной страницы без авторизации."""
+    # Фикстура для начала теста с главной страницы без авторизации.
     driver.get(Urls.MAIN_SITE)
     WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
         EC.visibility_of_element_located(Locators.THE_SIGN_IN_TO_ACCOUNT_BUTTON)
@@ -181,38 +176,37 @@ def start_from_main_not_login(driver):
 
 @pytest.fixture
 def login_existing_user(driver):
-    """Фикстура для логина существующего тестового пользователя."""
-    def _login_user(email=Credantial.EMAIL, password=Credantial.PASSWORD):
-        driver.get(Urls.LOGIN_SITE)
-        
-        WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-            EC.visibility_of_element_located(Locators.FIELD_EMAIL_LOGIN),
-            ErrorMessages.LOGIN_PAGE_NOT_LOADED
-        )
-        
-        email_field = driver.find_element(*Locators.FIELD_EMAIL_LOGIN)
-        email_field.clear()
-        email_field.send_keys(email)
-        
-        password_field = driver.find_element(*Locators.FIELD_PASSWORD_LOGIN)
-        password_field.clear()
-        password_field.send_keys(password)
-        
-        driver.find_element(*Locators.BUTTON_ENTRANCE).click()
-        
-        WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-            EC.url_to_be(Urls.MAIN_SITE),
-            ErrorMessages.MAIN_PAGE_NOT_LOADED_AFTER_LOGIN
-        )
-        
-        return email, password
+    # Фикстура для логина существующего тестового пользователя.
+    driver.get(Urls.LOGIN_SITE)
     
-    return _login_user
-
+    WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
+        EC.visibility_of_element_located(Locators.FIELD_EMAIL_LOGIN),
+        ErrorMessages.LOGIN_PAGE_NOT_LOADED
+    )
+    
+    email_field = driver.find_element(*Locators.FIELD_EMAIL_LOGIN)
+    email_field.clear()
+    email_field.send_keys(Credantial.EMAIL)
+    
+    password_field = driver.find_element(*Locators.FIELD_PASSWORD_LOGIN)
+    password_field.clear()
+    password_field.send_keys(Credantial.PASSWORD)
+    
+    driver.find_element(*Locators.BUTTON_ENTRANCE).click()
+    
+    WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
+        EC.url_to_be(Urls.MAIN_SITE),
+        ErrorMessages.MAIN_PAGE_NOT_LOADED_AFTER_LOGIN
+    )
+    
+    return {
+        StringValues.EMAIL: Credantial.EMAIL,
+        StringValues.PASSWORD: Credantial.PASSWORD
+    }
 
 @pytest.fixture(scope=StringValues.FUNCTION_SCOPE, autouse=True)
 def cleanup_after_test(driver):
-    """Безопасная очистка после теста."""
+    # Безопасная очистка после теста.
     yield
     
     try:
@@ -220,9 +214,5 @@ def cleanup_after_test(driver):
             driver.get(Urls.LOGIN_SITE)
             logger.info(LogMessages.CLEANUP_REDIRECT)
             
-    except WebDriverException as e:
+    except (WebDriverException, TimeoutException, InvalidSessionIdException, NoSuchWindowException) as e:
         logger.warning(LogMessages.WEBDRIVER_CLEANUP_ERROR.format(e))
-        
-    except Exception as e:
-        logger.error(LogMessages.CRITICAL_CLEANUP_ERROR.format(e))
-        raise

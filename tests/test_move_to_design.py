@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from curl import Urls
 from locators import Locators
 from data import Credantial, SectionTitles, ErrorMessages, ScreenshotNames, TestData, ScriptTemplates, AssertionTemplates
+import time
 
 class TestConstructorNavigation:
     
@@ -31,7 +32,6 @@ class TestConstructorNavigation:
             ErrorMessages.BUTTON_NOT_CLICKABLE
         ).click()
 
-        import time
         time.sleep(1)
 
         # Дождаться видимости раздела "Булки" и прокрутить к нему
