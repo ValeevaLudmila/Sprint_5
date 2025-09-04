@@ -5,3 +5,4 @@ class Urls:
     REGISTER_SITE = f"{MAIN_SITE}register"
     FORGOT_PASSWORD_SITE = f"{MAIN_SITE}forgot-password"
     PROFILE_SITE = f"{MAIN_SITE}account/profile"
+    ACCOUNT_SITE = f"{MAIN_SITE}account"

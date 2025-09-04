@@ -2,23 +2,22 @@ import pytest
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from locators import Locators
-from data import TestData, ErrorMessages, SuccessMessages
+from data import TestData, ErrorMessages, SuccessMessages, ScriptTemplates, DocumentStates, StringValues
 from curl import Urls
 from helpers import login_user
 
 class TestAuthentication:
     
     def test_entrance_by_main_button(self, driver):
-        """Тест входа через главную кнопку"""
+        # Тест входа через главную кнопку
         # Переходим на главную страницу
         driver.get(Urls.MAIN_SITE)
     
         # Ждем полной загрузки страницы
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-            lambda d: d.execute_script("return document.readyState") == "complete"
-        )
+    lambda d: d.execute_script(ScriptTemplates.DOCUMENT_READY_STATE) == DocumentStates.COMPLETE
+)
     
-        # Дополнительное ожидание для видимости кнопки
         login_button = WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.element_to_be_clickable(Locators.THE_SIGN_IN_TO_ACCOUNT_BUTTON),
             ErrorMessages.BUTTON_NOT_CLICKABLE
@@ -37,32 +36,29 @@ class TestAuthentication:
             ErrorMessages.ELEMENT_NOT_VISIBLE
         )
     
-    # Утверждения
         assert driver.current_url == Urls.LOGIN_SITE, ErrorMessages.URL_MISMATCH.format(
             Urls.LOGIN_SITE, driver.current_url
         )
         assert email_field.is_displayed(), ErrorMessages.ELEMENT_NOT_VISIBLE
 
     def test_password_recovery_page_access(self, start_from_main_page):
-        """Тест доступа к странице восстановления пароля."""
+        # Тест доступа к странице восстановления пароля.
         driver = start_from_main_page
 
         # Переходим на страницу восстановления пароля
         driver.get(Urls.FORGOT_PASSWORD_SITE)
         
-        # Ждем загрузки страницы восстановления
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.url_to_be(Urls.FORGOT_PASSWORD_SITE),
             ErrorMessages.RECOVERY_PAGE_NOT_LOADED
         )
 
-        # Проверяем что мы на странице восстановления пароля
         assert driver.current_url == Urls.FORGOT_PASSWORD_SITE, ErrorMessages.URL_MISMATCH.format(
             Urls.FORGOT_PASSWORD_SITE, driver.current_url
         )
 
     def test_entrance_from_recovery_page(self, start_from_main_page, registered_user):
-        """Тест входа в систему со страницы восстановления пароля."""
+        # Тест входа в систему со страницы восстановления пароля.
         driver = start_from_main_page
         email, password = registered_user
         
@@ -94,24 +90,22 @@ class TestAuthentication:
 
         driver.find_element(*Locators.BUTTON_ENTRANCE).click()
 
-        # Ожидание перехода на главную страницу
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.url_to_be(Urls.MAIN_SITE),
             ErrorMessages.MAIN_PAGE_NOT_LOADED
         )
         
-        # Проверяем что мы на основной странице сайта
         assert driver.current_url == Urls.MAIN_SITE, ErrorMessages.URL_MISMATCH.format(
             Urls.MAIN_SITE, driver.current_url
         )
 
     def test_user_logout(self, start_from_main_page, registered_user):
-        """Тест выхода пользователя из системы."""
+        # Тест выхода пользователя из системы.
         driver = start_from_main_page
         email, password = registered_user
     
         # Логинимся сначала
-        login_user(driver, email, password)  # Добавьте эту функцию или реализацию
+        login_user(driver, email, password)
     
         # Переходим в личный кабинет
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
@@ -120,7 +114,7 @@ class TestAuthentication:
 
         # Ждем загрузки профиля
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-            EC.url_contains("/account")
+            EC.url_contains(Urls.ACCOUNT_SITE)
         )
 
         # Выходим
@@ -128,7 +122,7 @@ class TestAuthentication:
             EC.element_to_be_clickable(Locators.BUTTON_LOGOUT)
         ).click()
 
-        # ПРАВИЛЬНО: После выхода должны быть на странице логина
+        # После выхода должны быть на странице логина
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.url_to_be(Urls.LOGIN_SITE)
         )

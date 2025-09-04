@@ -4,7 +4,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from curl import Urls
 from locators import Locators
-from data import Credantial, SectionTitles, ErrorMessages, ScreenshotNames, TestData
+from data import Credantial, SectionTitles, ErrorMessages, ScreenshotNames, TestData, ScriptTemplates, AssertionTemplates
 
 class TestConstructorNavigation:
     
@@ -12,9 +12,8 @@ class TestConstructorNavigation:
         driver = start_from_main_page
         email, password = authenticated_user
 
-        # Явное ожидание загрузки страницы
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-            EC.presence_of_element_located((By.TAG_NAME, "body")),
+            EC.presence_of_element_located(Locators.BODY),
             ErrorMessages.PAGE_NOT_LOADED
         )
 
@@ -25,15 +24,13 @@ class TestConstructorNavigation:
         )
     
         # Прокрутить к элементу для гарантии видимости
-        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", sauces_section)
+        driver.execute_script(ScriptTemplates.SCROLL_INTO_VIEW, sauces_section)
     
-        # Явное ожидание кликабельности и клик
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.element_to_be_clickable(Locators.SAUCES_SECTION),
             ErrorMessages.BUTTON_NOT_CLICKABLE
         ).click()
 
-        # Краткая пауза для анимации
         import time
         time.sleep(1)
 
@@ -43,15 +40,13 @@ class TestConstructorNavigation:
             ErrorMessages.ELEMENT_NOT_VISIBLE
         )
     
-        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", bread_section)
+        driver.execute_script(ScriptTemplates.SCROLL_INTO_VIEW, bread_section)
     
-        # Явное ожидание кликабельности и клик
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.element_to_be_clickable(Locators.BREAD_SECTION),
             ErrorMessages.BUTTON_NOT_CLICKABLE
         ).click()
 
-        # Пауза для применения изменений
         time.sleep(1)
 
         # Проверить наличие активного раздела
@@ -69,18 +64,18 @@ class TestConstructorNavigation:
         )
     
         assert SectionTitles.BREAD in active_tab.text, \
-            ErrorMessages.SECTION_NOT_ACTIVE + f" Ожидался раздел '{SectionTitles.BREAD}', но получен: {active_tab.text}"
+            ErrorMessages.SECTION_NOT_ACTIVE + AssertionTemplates.SECTION_VALIDATION_TEMPLATE.format(SectionTitles.BREAD, active_tab.text)
 
         # Дополнительная проверка: убедиться что заголовок раздела "Булки" виден
         bread_title = WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-            EC.visibility_of_element_located((By.XPATH, "//h2[text()='Булки']")),
+            EC.visibility_of_element_located(Locators.BREAD_TITLE),
             ErrorMessages.SECTION_NOT_ACTIVE
         )
     
         assert bread_title.is_displayed(), ErrorMessages.SECTION_NOT_ACTIVE    
 
     def test_fillings_section_activation(self, start_from_main_page, authenticated_user):
-        """Тест активации раздела 'Начинки' в конструкторе."""
+        # Тест активации раздела 'Начинки' в конструкторе.
         driver = start_from_main_page
         email, password = authenticated_user
 
@@ -99,21 +94,20 @@ class TestConstructorNavigation:
     
         # Проверяем заголовок раздела
         toppings_title = WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-            EC.visibility_of_element_located((By.XPATH, "//h2[text()='Начинки']")),
+            EC.visibility_of_element_located(Locators.TOPPINGS_TITLE),
             ErrorMessages.SECTION_NOT_ACTIVE
         )
     
         # Основные проверки
         assert SectionTitles.TOPPINGS in active_tab.text, \
-            f"Ожидался раздел '{SectionTitles.TOPPINGS}', но получен: {active_tab.text}"
+            AssertionMessages.TOPPINGS_SECTION_EXPECTED.format(SectionTitles.TOPPINGS, active_tab.text)
         assert toppings_title.is_displayed()
 
     def test_sauce_section_activation(self, start_from_main_page, authenticated_user):
-        """Тест активации раздела 'Соусы' в конструкторе"""
+        # Тест активации раздела 'Соусы' в конструкторе
         driver = start_from_main_page
-        # driver.maximize_window()  ← УДАЛЕНО!
-
-        # Сначала регистрируем/логинимся
+        
+        # логинимся
         email, password = authenticated_user
 
         # Нажать на раздел "Соусы"
@@ -135,4 +129,4 @@ class TestConstructorNavigation:
             ErrorMessages.ELEMENT_NOT_FOUND
         )
         assert SectionTitles.SAUCES in active_tab.text, \
-            f"Ожидался раздел '{SectionTitles.SAUCES}', но получен: {active_tab.text}"
+            AssertionMessages.SAUCES_SECTION_EXPECTED.format(SectionTitles.SAUCES, active_tab.text)

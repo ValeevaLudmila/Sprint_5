@@ -5,15 +5,13 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException,
 from locators import Locators
 from curl import Urls
 from generating_logins import EmailPasswordGenerator
-from data import Credantial, ErrorMessages, SuccessMessages, ScreenshotNames
+from data import Credantial, ErrorMessages, SuccessMessages, ScreenshotNames, TestNames, TestPasswords, StringValues
 
 class TestRegistration:
-    """Тесты функциональности регистрации"""
+    # Тесты функциональности регистрации
     
     def test_successful_registration(self, driver, generate_new_user_data):
-        """
-        Тест успешной регистрации нового аккаунта
-        """
+        # Тест успешной регистрации нового аккаунта
         user_data = generate_new_user_data
         
         # 1. Переходим на страницу регистрации
@@ -77,9 +75,7 @@ class TestRegistration:
         assert driver.current_url == Urls.MAIN_SITE, ErrorMessages.REGISTRATION_FAILED
 
     def test_existing_account_registration(self, driver):
-        """
-        Тест попытки регистрации существующего аккаунта
-        """
+        # Тест попытки регистрации существующего аккаунта
         # 1. Переходим на страницу регистрации
         driver.get(Urls.REGISTER_SITE)
         
@@ -107,9 +103,7 @@ class TestRegistration:
         assert Urls.REGISTER_SITE in driver.current_url, ErrorMessages.EXISTING_ACCOUNT_ERROR
 
     def test_registration_without_name(self, driver):
-        """
-        Тест регистрации без имени
-        """
+        # Тест регистрации без имени
         # 1. Переходим на страницу регистрации
         driver.get(Urls.REGISTER_SITE)
         
@@ -138,9 +132,7 @@ class TestRegistration:
         assert driver.current_url == Urls.REGISTER_SITE, ErrorMessages.NAME_REQUIRED_ERROR
 
     def test_password_validation_error(self, driver):
-        """
-        Тест ошибки при коротком пароле
-        """
+        # Тест ошибки при коротком пароле
         # 1. Переходим на страницу регистрации
         driver.get(Urls.REGISTER_SITE)
         
@@ -155,9 +147,9 @@ class TestRegistration:
         email, _ = generator.generate()
         
         # 4. Заполняем форму
-        driver.find_element(*Locators.FIELD_NAME_REGISTER).send_keys("Тест")
+        driver.find_element(*Locators.FIELD_NAME_REGISTER).send_keys(TestNames.DEFAULT_TEST_NAME)
         driver.find_element(*Locators.FIELD_EMAIL_REGISTER).send_keys(email)
-        driver.find_element(*Locators.FIELD_PASSWORD_REGISTER).send_keys("short")
+        driver.find_element(*Locators.FIELD_PASSWORD_REGISTER).send_keys(TestPasswords.SHORT_PASSWORD)
         
         # 5. Нажимаем кнопку Зарегистрироваться
         driver.find_element(*Locators.BUTTON_REGISTER).click()
@@ -172,9 +164,7 @@ class TestRegistration:
         assert Urls.REGISTER_SITE in driver.current_url, ErrorMessages.PASSWORD_VALIDATION_ERROR
 
     def test_registration_without_password(self, driver):
-        """
-        Тест регистрации без пароля
-        """
+        # Тест регистрации без пароля
         # 1. Переходим на страницу регистрации
         driver.get(Urls.REGISTER_SITE)
         
@@ -189,7 +179,7 @@ class TestRegistration:
         email, _ = generator.generate()
         
         # 4. Заполняем только имя и email
-        driver.find_element(*Locators.FIELD_NAME_REGISTER).send_keys("Тест")
+        driver.find_element(*Locators.FIELD_NAME_REGISTER).send_keys(TestNames.DEFAULT_TEST_NAME)
         driver.find_element(*Locators.FIELD_EMAIL_REGISTER).send_keys(email)
         
         # 5. Нажимаем кнопку Зарегистрироваться

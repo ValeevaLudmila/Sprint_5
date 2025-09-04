@@ -4,6 +4,67 @@ class Credantial:
     EMAIL = 'Ludmila_Valeeva_28_748@yandex.ru'
     PASSWORD = '238abcd'
 
+class StringValues:
+    """Строковые значения"""
+    READY_STATE_COMPLETE = "complete"
+    FUNCTION_SCOPE = "function"
+    AUTOUse = "autouse"
+    NAME = "name"
+    EMAIL = "email"
+    PASSWORD = "password"
+
+class LogMessages:
+    """Сообщения для логирования"""
+    INSTALLING_CHROMEDRIVER = "Installing ChromeDriver..."
+    CREATING_WEBDRIVER = "Creating WebDriver instance..."
+    WEBDRIVER_CONFIGURED = "WebDriver configured successfully"
+    WEBDRIVER_INIT_ERROR = "WebDriver initialization error: {}"
+    WEBDRIVER_SETUP_TIMEOUT = "WebDriver setup timeout: {}"
+    INVALID_CONFIGURATION = "Invalid configuration: {}"
+    UNEXPECTED_ERROR = "Unexpected error in driver fixture: {}"
+    QUITTING_WEBDRIVER = "Quitting WebDriver..."
+    WEBDRIVER_QUIT_SUCCESS = "WebDriver quit successfully"
+    DRIVER_QUIT_ERROR = "Error during driver quit: {}"
+    CLEANUP_REDIRECT = "Cleanup: redirected to login page"
+    WEBDRIVER_CLEANUP_ERROR = "WebDriver error during cleanup: {}"
+    CRITICAL_CLEANUP_ERROR = "Critical cleanup error: {}"
+
+class FixtureDescriptions:
+    """Описания фикстур"""
+    GENERATE_USER_DATA = "Фикстура для генерации новых данных пользователя."
+    START_FROM_MAIN = "Фикстура для начала теста с главной страницы."
+    START_FROM_LOGIN = "Фикстура для начала теста со страницы логина."
+    START_FROM_REGISTER = "Фикстура для начала теста со страницы регистрации."
+    REGISTERED_USER = "Фикстура для регистрации нового пользователя."
+    AUTHENTICATED_USER = "Фикстура для аутентифицированного пользователя."
+    START_FROM_MAIN_NOT_LOGIN = "Фикстура для начала теста с главной страницы без авторизации."
+    LOGIN_EXISTING_USER = "Фикстура для логина существующего тестового пользователя."
+    CLEANUP_AFTER_TEST = "Безопасная очистка после теста. Не маскирует ошибки."
+
+class ExceptionTypes:
+    """Типы исключений для импорта"""
+    WEBDRIVER_EXCEPTION = "WebDriverException"
+    SESSION_NOT_CREATED = "SessionNotCreatedException"
+    TIMEOUT_EXCEPTION = "TimeoutException"
+    INVALID_SESSION = "InvalidSessionIdException"
+    NO_SUCH_WINDOW = "NoSuchWindowException"
+    NO_SUCH_ELEMENT = "NoSuchElementException"
+    ELEMENT_CLICK_INTERCEPTED = "ElementClickInterceptedException"
+    STALE_ELEMENT = "StaleElementReferenceException"
+
+class ModulePaths:
+    """Пути к модулям"""
+    PARENT_DIR = ".."
+    CURRENT_DIR = "."
+
+class ChromeOptions:
+    """Настройки Chrome Options"""
+    # Можно добавить часто используемые опции
+    DISABLE_EXTENSIONS = "disable-extensions"
+    DISABLE_GPU = "disable-gpu"
+    NO_SANDBOX = "no-sandbox"
+    DISABLE_DEV_SHM = "disable-dev-shm-usage"
+
 class TestData:
     # Увеличенные таймауты для стабильности
     PAGE_LOAD_TIMEOUT = 120  # 120 секунд для загрузки страниц
@@ -125,3 +186,83 @@ class NetworkConditions:
     SLOW_NETWORK_TIMEOUT = 180
     NORMAL_NETWORK_TIMEOUT = 120
     FAST_NETWORK_TIMEOUT = 60
+
+class TestPasswords:
+    """Тестовые пароли для валидации"""
+    SHORT_PASSWORD = "short"  # Короткий пароль для теста валидации
+    VALID_PASSWORD = "valid_password_123"  # Валидный пароль
+    EMPTY_PASSWORD = ""  # Пустой пароль
+
+class TestNames:
+    """Тестовые имена"""
+    DEFAULT_TEST_NAME = "Тест"
+    EMPTY_NAME = ""
+    LONG_NAME = "Очень длинное имя пользователя которое превышает лимит"
+
+class TestEmails:
+    """Тестовые email адреса"""
+    VALID_EMAIL_PREFIX = "test_user"  # Префикс для генерации email
+    INVALID_EMAIL = "invalid-email"  # Невалидный email
+    EMPTY_EMAIL = ""  # Пустой email
+
+class AssertionMessages:
+    """Сообщения для утверждений (assert)"""
+    SECTION_VALIDATION = "Ожидался раздел '{}', но получен: {}"
+    BREAD_SECTION_EXPECTED = ErrorMessages.SECTION_NOT_ACTIVE + " Ожидался раздел '{}', но получен: {}"
+    ACTIVE_SECTION_NOT_DISPLAYED = "Активный раздел не отображается"
+    SECTION_TITLE_NOT_DISPLAYED = "Заголовок раздела не отображается"
+
+class TestDescriptions:
+    """Описания тестовых действий"""
+    FILLINGS_SECTION_TEST = "Тест активации раздела 'Начинки' в конструкторе."
+    SAUCE_SECTION_TEST = "Тест активации раздела 'Соусы' в конструкторе"
+    LOGIN_ACTION = "логинимся"
+
+class TimeoutValues:
+    """Значения таймаутов"""
+    DEFAULT_TIMEOUT = 10
+    SAUCE_SECTION_TIMEOUT = 10
+    BREAD_SECTION_TIMEOUT = 10
+    GENERAL_TIMEOUT = 15
+    LONG_TIMEOUT = 20
+    SHORT_TIMEOUT = 5
+
+class Comments:
+    """Текстовые комментарии для кода"""
+    WAIT_FOR_SAUCES = "Дождаться видимости раздела 'Соусы' и прокрутить к нему"
+    SCROLL_FOR_VISIBILITY = "Прокрутить к элементу для гарантии видимости"
+    WAIT_FOR_BREAD = "Дождаться видимости раздела 'Булки' и прокрутить к нему"
+    CHECK_ACTIVE_SECTION = "Проверить наличие активного раздела"
+    CHECK_BREAD_TAB = "Проверить что активная вкладка соответствует разделу 'Булки'"
+    CHECK_BREAD_TITLE = "Дополнительная проверка: убедиться что заголовок раздела 'Булки' виден"
+
+class AssertionTemplates:
+    """Шаблоны для утверждений"""
+    SECTION_VALIDATION_TEMPLATE = "Ожидался раздел '{}', но получен: {}"
+
+class SectionNames:
+    """Названия разделов для использования в тексте"""
+    SAUCES = "Соусы"
+    BREAD = "Булки"
+    TOPPINGS = "Начинки"
+
+class ScriptTemplates:
+    """Шаблоны JavaScript скриптов"""
+    SCROLL_INTO_VIEW = "arguments[0].scrollIntoView({block: 'center'});"
+    DOCUMENT_READY_STATE = "return document.readyState"
+
+class DocumentStates:
+    """Состояния документа"""
+    COMPLETE = "complete"
+    LOADING = "loading"
+    INTERACTIVE = "interactive"
+    # Добавляем метод для проверки готовности
+    @staticmethod
+    def is_complete(state):
+        return state == DocumentStates.COMPLETE
+
+class SleepDurations:
+    """Длительности пауз"""
+    SHORT_PAUSE = 1
+    MEDIUM_PAUSE = 2
+    LONG_PAUSE = 3

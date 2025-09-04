@@ -7,12 +7,10 @@ from curl import Urls
 from data import ErrorMessages
 
 class TestPersonalAccountNavigation:
-    """Тесты навигации личного кабинета"""
+    # Тесты навигации личного кабинета
     
     def test_constructor_transition(self, start_from_main_page, authenticated_user):
-        """
-        Тест перехода на главную страницу через кнопку 'Конструктор'
-        """
+        # Тест перехода на главную страницу через кнопку 'Конструктор'
         driver = start_from_main_page
         email, password = authenticated_user
         
@@ -34,7 +32,7 @@ class TestPersonalAccountNavigation:
 
         # Ждем загрузки страницы профиля
         WebDriverWait(driver, 10).until(
-            EC.url_contains("/account"),
+            EC.url_contains(Urls.ACCOUNT_SITE),
             ErrorMessages.PROFILE_PAGE_NOT_LOADED
         )
 
@@ -54,9 +52,7 @@ class TestPersonalAccountNavigation:
         assert driver.current_url == Urls.MAIN_SITE, ErrorMessages.CONSTRUCTOR_TRANSITION_FAILED
 
     def test_logo_transition(self, start_from_main_page, authenticated_user):
-        """
-        Тест перехода на главную страницу через логотип
-        """
+        # Тест перехода на главную страницу через логотип
         driver = start_from_main_page
         email, password = authenticated_user
         
@@ -78,7 +74,7 @@ class TestPersonalAccountNavigation:
 
         # Ждем загрузки страницы профиля
         WebDriverWait(driver, 15).until(
-            EC.url_contains("/account"),
+            EC.url_contains(Urls.ACCOUNT_SITE),
             ErrorMessages.PROFILE_PAGE_NOT_LOADED
         )
 
@@ -98,9 +94,7 @@ class TestPersonalAccountNavigation:
         assert driver.current_url == Urls.MAIN_SITE, ErrorMessages.LOGO_TRANSITION_FAILED
 
     def test_profile_transition(self, start_from_main_page, authenticated_user):
-        """
-        Тест перехода в личный кабинет
-        """
+        # Тест перехода в личный кабинет
         driver = start_from_main_page
         email, password = authenticated_user
         
