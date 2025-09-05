@@ -4,8 +4,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from curl import Urls
 from locators import Locators
-from data import Credantial, SectionTitles, ErrorMessages, ScreenshotNames, TestData, ScriptTemplates, AssertionTemplates
-import time
+from data import Credantial, SectionTitles, ErrorMessages, ScreenshotNames, TestData, ScriptTemplates, AssertionTemplates, AssertionMessages
 
 class TestConstructorNavigation:
     
@@ -32,7 +31,10 @@ class TestConstructorNavigation:
             ErrorMessages.BUTTON_NOT_CLICKABLE
         ).click()
 
-        time.sleep(1)
+        WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
+            EC.visibility_of_element_located(Locators.SAUCES_TITLE),
+            ErrorMessages.SECTION_NOT_ACTIVE
+        )
 
         # Дождаться видимости раздела "Булки" и прокрутить к нему
         bread_section = WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
@@ -47,7 +49,10 @@ class TestConstructorNavigation:
             ErrorMessages.BUTTON_NOT_CLICKABLE
         ).click()
 
-        time.sleep(1)
+        WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
+            EC.visibility_of_element_located(Locators.BREAD_TITLE),
+            ErrorMessages.SECTION_NOT_ACTIVE
+        )
 
         # Проверить наличие активного раздела
         active_element = WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
@@ -111,13 +116,13 @@ class TestConstructorNavigation:
         email, password = authenticated_user
 
         # Нажать на раздел "Соусы"
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.element_to_be_clickable(Locators.SAUCES_SECTION),
             ErrorMessages.ELEMENT_NOT_FOUND
         ).click()
 
         # Проверить наличие активного раздела
-        active_element = WebDriverWait(driver, 10).until(
+        active_element = WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.presence_of_element_located(Locators.ACTIVE_SECTION),
             ErrorMessages.SECTION_NOT_ACTIVE
         )
