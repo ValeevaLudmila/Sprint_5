@@ -8,15 +8,16 @@ from helpers import login_user
 
 class TestAuthentication:
     
-    def test_entrance_by_main_button(self, driver):
+    def test_entrance_by_main_button(self, start_from_main_page):
         # Тест входа через главную кнопку
         # Переходим на главную страницу
-        driver.get(Urls.MAIN_SITE)
+        driver = start_from_main_page
     
         # Ждем полной загрузки страницы
         WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
-    lambda d: d.execute_script(ScriptTemplates.DOCUMENT_READY_STATE) == DocumentStates.COMPLETE
-)
+            lambda d: d.execute_script(ScriptTemplates.DOCUMENT_READY_STATE) 
+            == DocumentStates.COMPLETE
+        )
     
         login_button = WebDriverWait(driver, TestData.EXPLICIT_WAIT).until(
             EC.element_to_be_clickable(Locators.THE_SIGN_IN_TO_ACCOUNT_BUTTON),

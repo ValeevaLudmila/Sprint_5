@@ -10,12 +10,12 @@ from data import Credantial, ErrorMessages, SuccessMessages, ScreenshotNames, Te
 class TestRegistration:
     # Тесты функциональности регистрации
     
-    def test_successful_registration(self, driver, generate_new_user_data):
+    def test_successful_registration(self, driver, generate_new_user_data, start_from_register_page):
         # Тест успешной регистрации нового аккаунта
         user_data = generate_new_user_data
         
         # 1. Переходим на страницу регистрации
-        driver.get(Urls.REGISTER_SITE)
+        driver = start_from_register_page
         
         # 2. Ждем загрузки формы регистрации
         WebDriverWait(driver, 15).until(
@@ -74,10 +74,10 @@ class TestRegistration:
         # 11. Проверяем URL
         assert driver.current_url == Urls.MAIN_SITE, ErrorMessages.REGISTRATION_FAILED
 
-    def test_existing_account_registration(self, driver):
+    def test_existing_account_registration(self, driver, start_from_register_page):
         # Тест попытки регистрации существующего аккаунта
         # 1. Переходим на страницу регистрации
-        driver.get(Urls.REGISTER_SITE)
+        driver = start_from_register_page
         
         # 2. Ждем загрузки формы регистрации
         WebDriverWait(driver, 15).until(
@@ -102,10 +102,10 @@ class TestRegistration:
         # 6. Проверяем что остались на странице регистрации
         assert Urls.REGISTER_SITE in driver.current_url, ErrorMessages.EXISTING_ACCOUNT_ERROR
 
-    def test_registration_without_name(self, driver):
+    def test_registration_without_name(self, driver, start_from_register_page):
         # Тест регистрации без имени
         # 1. Переходим на страницу регистрации
-        driver.get(Urls.REGISTER_SITE)
+        driver = start_from_register_page
         
         # 2. Ждем загрузки формы регистрации
         WebDriverWait(driver, 15).until(
@@ -131,10 +131,10 @@ class TestRegistration:
         )
         assert driver.current_url == Urls.REGISTER_SITE, ErrorMessages.NAME_REQUIRED_ERROR
 
-    def test_password_validation_error(self, driver):
+    def test_password_validation_error(self, driver, start_from_register_page):
         # Тест ошибки при коротком пароле
         # 1. Переходим на страницу регистрации
-        driver.get(Urls.REGISTER_SITE)
+        driver = start_from_register_page
         
         # 2. Ждем загрузки формы регистрации
         WebDriverWait(driver, 15).until(
@@ -163,10 +163,10 @@ class TestRegistration:
         # 7. Проверяем что остались на странице регистрации
         assert Urls.REGISTER_SITE in driver.current_url, ErrorMessages.PASSWORD_VALIDATION_ERROR
 
-    def test_registration_without_password(self, driver):
+    def test_registration_without_password(self, driver, start_from_register_page):
         # Тест регистрации без пароля
         # 1. Переходим на страницу регистрации
-        driver.get(Urls.REGISTER_SITE)
+        driver = start_from_register_page
         
         # 2. Ждем загрузки формы регистрации
         WebDriverWait(driver, 15).until(
