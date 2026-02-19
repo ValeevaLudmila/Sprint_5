@@ -22,13 +22,14 @@ Python, Selenium, pytest, Google Chrome, Mozilla Firefox, Git
 ## 📌 Структура проекта
 
 ```
-tests/            # тестовые сценарии
-conftest.py       # фикстуры
-locators.py       # локаторы
-generators.py     # генерация тестовых данных
-requirements.txt
-.gitignore
-README.md
+tests/                  # тесты
+conftest.py             # фикстуры
+locators.py             # локаторы
+data.py                 # тестовые данные и сообщения
+curl.py                 # URL страниц
+generating_logins.py    # генерация email/пароля
+helpers.py              # вспомогательные функции
+pytest.ini              # конфиг pytest
 ```
 
 * Тесты автономны, используют driver.quit()
