@@ -44,7 +44,3 @@ git clone https://github.com/ValeevaLudmila/Sprint_5.git
 pip install -r requirements.txt
 pytest
 ```
-
----
-
-Если хочешь, я могу сделать ещё более лаконичную «одностраничную» версию, чтобы README в профиле выглядел как презентация проекта. Хочешь, чтобы я так сделал?
