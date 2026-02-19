@@ -29,7 +29,6 @@ data.py                 # тестовые данные и сообщения
 curl.py                 # URL страниц
 generating_logins.py    # генерация email/пароля
 helpers.py              # вспомогательные функции
-pytest.ini              # конфиг pytest
 ```
 
 * Тесты автономны, используют driver.quit()
