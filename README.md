@@ -23,7 +23,6 @@ Python, Selenium, pytest, Google Chrome, Mozilla Firefox, Git
 
 ```
 tests/                  # тесты
-conftest.py             # фикстуры
 locators.py             # локаторы
 data.py                 # тестовые данные и сообщения
 curl.py                 # URL страниц
